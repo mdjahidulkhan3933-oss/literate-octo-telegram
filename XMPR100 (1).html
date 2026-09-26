@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#07182c">
+<title>XMPR100 — Telegram Mini App</title>
+<style>
+:root{
+  --bg:#06172b; --panel:#102943; --panel2:#173b59; --cyan:#43d9ff;
+  --cyan2:#2ca6d1; --green:#77ff9a; --pink:#ef4bbd; --text:#f7fbff;
+  --muted:#9eb4c9; --gold:#ffb72b; --shadow:0 18px 45px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#041226;color:var(--text)}
+body{overflow-x:hidden}
+button{font:inherit;color:inherit;border:0;cursor:pointer}
+.app{width:100%;min-height:100vh;position:relative;overflow:hidden;background:
+ radial-gradient(circle at 92% 10%,rgba(53,180,255,.24),transparent 17%),
+ radial-gradient(circle at 4% 72%,rgba(17,98,151,.28),transparent 28%),
+ linear-gradient(145deg,#071a31 0%,#092d47 53%,#0c4760 100%)}
+.app:before{content:"";position:absolute;inset:0;opacity:.16;background-image:
+ linear-gradient(135deg,transparent 0 47%,#2a6b82 48% 49%,transparent 50%),
+ linear-gradient(25deg,transparent 0 62%,#24556e 63% 64%,transparent 65%);background-size:220px 220px;pointer-events:none}
+.shell{width:min(100%,430px);margin:auto;position:relative;z-index:2;padding:12px 12px 100px}
+.topbar{height:55px;display:flex;align-items:center;justify-content:space-between}
+.brand{font-weight:900;letter-spacing:.5px;font-size:19px}
+.brand span{color:#47dcff}
+.iconbtn{width:42px;height:42px;border-radius:15px;background:rgba(17,48,75,.9);border:1px solid rgba(121,210,242,.16);display:grid;place-items:center;box-shadow:0 7px 18px rgba(0,0,0,.2)}
+.profile{display:flex;align-items:center;gap:10px;background:linear-gradient(100deg,#112e4b,#0b213a);border:1px solid rgba(87,201,235,.18);border-radius:20px;padding:10px 12px;box-shadow:var(--shadow)}
+.avatar{width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#36d7ff,#246fa9);font-size:27px;border:2px solid #72e8ff}
+.userinfo{flex:1}.username{font-weight:800}.level{font-size:11px;color:#a9c1d5;margin-top:2px}
+.bell{position:relative;font-size:23px}.badge{position:absolute;right:-5px;top:-7px;background:#ff167b;border-radius:12px;font-size:10px;padding:3px 6px;font-weight:900}
+.progress{height:6px;background:#1b3852;border-radius:20px;margin:9px 1px 13px;overflow:hidden}.progress i{display:block;width:42%;height:100%;background:linear-gradient(90deg,#3de5ff,#47b9ff)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{padding:11px 12px;border-radius:18px;background:linear-gradient(145deg,#173654,#102942);border:1px solid rgba(95,206,240,.13);display:flex;align-items:center;gap:9px}.stat b{font-size:15px}.stat small{display:block;color:#91abc0;font-size:10px}.coin-dot,.clock{width:35px;height:35px;border-radius:50%;display:grid;place-items:center;font-size:19px;background:#a83bd0}.clock{background:#39d65a}
+.hero{margin-top:12px;min-height:365px;border-radius:30px;position:relative;overflow:hidden;background:
+ radial-gradient(circle at 50% 45%,rgba(57,222,255,.23),transparent 27%),
+ linear-gradient(180deg,#0d233b 0%,#0c2943 62%,#42c8ee 100%);border:1px solid rgba(100,219,247,.25);box-shadow:var(--shadow)}
+.hero:after{content:"";position:absolute;left:-15%;right:-15%;bottom:-45px;height:145px;background:radial-gradient(ellipse at center,rgba(128,241,255,.9),rgba(38,158,201,.55) 45%,transparent 72%);filter:blur(5px)}
+.earnrate{padding:15px 18px 0;text-align:center;color:#d6e7f4}.earnrate strong{font-size:38px;display:block;color:#fff;letter-spacing:1px}.diamond{color:#43d9ff;font-size:31px;margin-right:7px;text-shadow:0 0 18px #28d9ff}
+.fox-wrap{height:205px;position:relative;display:grid;place-items:center}.fox{position:relative;width:175px;height:175px;filter:drop-shadow(0 20px 18px rgba(0,0,0,.32))}
+.fox .tail{position:absolute;width:78px;height:118px;right:-27px;bottom:7px;background:linear-gradient(145deg,#ff8b2f,#df3d26);border:5px solid #5e3428;border-radius:65% 40% 65% 40%;transform:rotate(-18deg);z-index:0}.fox .tail:after{content:"";position:absolute;right:2px;bottom:-3px;width:48px;height:45px;border-radius:50%;background:#fff0e5}
+.fox .body{position:absolute;left:38px;top:72px;width:100px;height:89px;border-radius:45% 45% 38% 38%;background:linear-gradient(160deg,#ff9b37,#e94a26);border:5px solid #5e3428;z-index:2}
+.fox .shirt{position:absolute;left:49px;top:94px;width:78px;height:65px;border-radius:30px;background:linear-gradient(145deg,#2d806f,#174d5d);z-index:3;clip-path:polygon(0 18%,100% 0,100% 100%,0 100%)}
+.fox .head{position:absolute;left:20px;top:15px;width:135px;height:105px;border-radius:52% 48% 50% 50%;background:linear-gradient(150deg,#ffad47,#ed4d27);border:5px solid #5e3428;z-index:4}
+.fox .ear1,.fox .ear2{position:absolute;top:-37px;width:55px;height:63px;background:#f07930;border:5px solid #5e3428;z-index:5}.fox .ear1{left:8px;transform:rotate(-20deg);clip-path:polygon(0 100%,25% 0,100% 75%)}.fox .ear2{right:8px;transform:rotate(20deg);clip-path:polygon(0 75%,75% 0,100% 100%)}.fox .ear1:after,.fox .ear2:after{content:"";position:absolute;inset:14px;background:#ffd6c4}
+.eye{position:absolute;top:43px;width:25px;height:20px;background:#fff;border-radius:50%;z-index:7}.eye:after{content:"";position:absolute;width:9px;height:12px;border-radius:50%;background:#172b31;left:8px;top:4px}.eye.l{left:30px}.eye.r{right:30px}
+.muzzle{position:absolute;left:43px;top:65px;width:48px;height:29px;background:#fff3e8;border-radius:50%;z-index:7}.nose{position:absolute;left:60px;top:67px;width:18px;height:12px;border-radius:50%;background:#35251f;z-index:8}.smile{position:absolute;left:59px;top:75px;width:20px;height:12px;border-bottom:3px solid #452b24;border-radius:50%;z-index:8}
+.glass{position:absolute;left:80px;top:95px;width:25px;height:39px;background:linear-gradient(90deg,#ff7a2a,#ffd16b);border:3px solid #5e3428;border-radius:7px;z-index:9;transform:rotate(-7deg)}.straw{position:absolute;left:98px;top:78px;width:3px;height:22px;background:#ffefc4;transform:rotate(-17deg);z-index:9}
+.paw{position:absolute;right:18px;top:102px;width:25px;height:45px;background:#f27a2e;border:4px solid #5e3428;border-radius:50%;z-index:10;transform:rotate(-20deg)}
+.upgrade{position:relative;z-index:20;display:block;margin:0 auto;padding:13px 32px;border-radius:30px;background:linear-gradient(180deg,#9dff9d,#4ef0a0);color:#123d3b;font-weight:900;box-shadow:0 9px 25px rgba(74,255,166,.24);font-size:15px}.upgrade:active{transform:scale(.97)}
+.mining{margin-top:12px;padding:14px;border-radius:22px;background:rgba(12,38,61,.86);border:1px solid rgba(105,209,239,.15);display:flex;align-items:center;justify-content:space-between}.mining b{display:block}.mining small{color:#91abc0}.switch{width:53px;height:29px;border-radius:30px;background:#29465e;padding:3px}.switch i{display:block;width:23px;height:23px;border-radius:50%;background:#a7b7c5;transition:.25s}.switch.on{background:#38db85}.switch.on i{transform:translateX(24px);background:#fff}
+.tasks{margin-top:12px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 3px 9px}.section-title h3{margin:0;font-size:16px}.section-title span{font-size:11px;color:#74e8ff}
+.task{display:flex;align-items:center;gap:10px;padding:11px;margin-bottom:8px;border-radius:18px;background:linear-gradient(110deg,#173a55,#0e2a45);border:1px solid rgba(90,200,230,.13)}.task-icon{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:#214d69;font-size:21px}.task-info{flex:1}.task-info b{font-size:13px}.task-info small{display:block;color:#8fa9bd;font-size:10px;margin-top:2px}.task button{background:#31b9d8;padding:8px 12px;border-radius:12px;font-size:11px;font-weight:900}.task button.done{background:#42d77d}
+.bottom{position:fixed;z-index:50;left:50%;transform:translateX(-50%);bottom:10px;width:min(calc(100% - 24px),406px);display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:7px;border-radius:23px;background:rgba(10,45,66,.94);border:1px solid rgba(109,222,247,.25);box-shadow:0 15px 40px rgba(0,0,0,.4);backdrop-filter:blur(14px)}.nav{background:transparent;border-radius:17px;padding:7px 2px;color:#9db7c9;font-size:9px;font-weight:700}.nav .ni{font-size:19px;display:block;margin-bottom:2px}.nav.active{background:#38bede;color:#fff}
+.toast{position:fixed;z-index:100;left:50%;top:18px;transform:translate(-50%,-130px);background:#122f49;border:1px solid #43d9ff;border-radius:16px;padding:11px 16px;font-size:12px;box-shadow:var(--shadow);transition:.3s;white-space:nowrap}.toast.show{transform:translate(-50%,0)}
+.page{display:none}.page.active{display:block}
+.modal{position:fixed;inset:0;background:rgba(0,7,18,.72);z-index:80;display:none;align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:auto;background:#0b233a;border:1px solid rgba(91,215,245,.2);border-bottom:0;border-radius:28px 28px 0 0;padding:22px;box-shadow:0 -20px 70px rgba(0,0,0,.45)}.sheet h2{margin:0 0 7px}.sheet p{color:#9db3c6;font-size:13px;line-height:1.6}.close{width:100%;padding:13px;border-radius:15px;background:#2cb9dc;font-weight:900;margin-top:10px}
+@media(min-width:700px){.shell{padding-top:25px}.bottom{bottom:22px}}
+</style>
+  <script src="//libtl.com/sdk.js" data-zone="11711270" data-sdk="show_11711270"></script>
+</head>
+<body>
+<div class="app">
+<div class="shell">
+  <div class="topbar">
+    <div class="brand">XMPR<span>100</span></div>
+    <button class="iconbtn" onclick="showInfo()">⋯</button>
+  </div>
+
+  <div class="profile">
+    <div class="avatar">🦊</div>
+    <div class="userinfo"><div class="username">amd...dda</div><div class="level">LVL 4/10</div></div>
+    <div class="bell">🔔<span class="badge">14</span></div>
+  </div>
+  <div class="progress"><i></i></div>
+
+  <div class="page active" id="earnPage">
+    <div class="stats">
+      <div class="stat"><div class="coin-dot">💎</div><div><b id="rate">+115</b><small>/hour</small></div></div>
+      <div class="stat"><div class="clock">◷</div><div><b id="time">2 hours</b><small>claim time</small></div></div>
+    </div>
+
+    <div class="hero">
+      <div class="earnrate"><span>💠 <b>200</b> / hour</span><strong><span class="diamond">◆</span><span id="balance">100390</span></strong></div>
+      <div class="fox-wrap">
+        <div class="fox">
+          <div class="tail"></div><div class="body"></div><div class="shirt"></div>
+          <div class="head"></div><div class="ear1"></div><div class="ear2"></div>
+          <div class="eye l"></div><div class="eye r"></div><div class="muzzle"></div><div class="nose"></div><div class="smile"></div>
+          <div class="glass"></div><div class="straw"></div><div class="paw"></div>
+        </div>
+      </div>
+      <button class="upgrade" onclick="upgrade()">↟ &nbsp; Upgrade</button>
+    </div>
+
+    <div class="mining"><div><b>⚡ Auto Mining</b><small>Earn coins while you're away</small></div><button class="switch" id="switch" onclick="toggleMining()"><i></i></button></div>
+
+    <div class="tasks">
+      <div class="section-title"><h3>⚡ Tasks</h3><span>+2,500 available</span></div>
+      <div class="task"><div class="task-icon">🎁</div><div class="task-info"><b>Daily Reward</b><small>Claim your daily bonus</small></div><button id="daily" onclick="claimDaily()">+500</button></div>
+      <div class="task"><div class="task-icon">✈️</div><div class="task-info"><b>Join Telegram</b><small>Follow our official channel</small></div><button onclick="completeTask(this,500)">+500</button></div>
+      <div class="task"><div class="task-icon">🤝</div><div class="task-info"><b>Invite 20 Friends</b><small>Grow your community</small></div><button onclick="completeTask(this,1500)">+1500</button></div>
+    </div>
+  </div>
+
+  <div class="page" id="cardsPage">
+    <div class="hero" style="padding:25px;min-height:250px">
+      <div class="section-title"><h3>🎴 Mining Cards</h3><span>LEVEL 4</span></div>
+      <div class="task"><div class="task-icon">🚀</div><div class="task-info"><b>Turbo Engine</b><small>+80 coins/hour</small></div><button onclick="buyCard(this,800)">800</button></div>
+      <div class="task"><div class="task-icon">💎</div><div class="task-info"><b>Diamond Rig</b><small>+150 coins/hour</small></div><button onclick="buyCard(this,1500)">1500</button></div>
+      <div class="task"><div class="task-icon">🌴</div><div class="task-info"><b>Tropical Farm</b><small>+250 coins/hour</small></div><button onclick="buyCard(this,2500)">2500</button></div>
+    </div>
+  </div>
+
+  <div class="page" id="shopPage">
+    <div class="hero" style="padding:25px;min-height:250px">
+      <div class="section-title"><h3>🛍️ Shop</h3><span>COIN STORE</span></div>
+      <div class="task"><div class="task-icon">🎁</div><div class="task-info"><b>Starter Box</b><small>Random rewards</small></div><button onclick="buyCard(this,1000)">1K</button></div>
+      <div class="task"><div class="task-icon">⚡</div><div class="task-info"><b>2X Boost</b><small>Boost mining for 1 hour</small></div><button onclick="buyCard(this,2000)">2K</button></div>
+    </div>
+  </div>
+
+  <div class="page" id="refPage">
+    <div class="hero" style="padding:25px;min-height:320px;text-align:center">
+      <div style="font-size:64px;margin:15px">🤝</div>
+      <h2>Invite Friends</h2><p style="color:#9db3c6">Invite your friends and earn <b style="color:#77ff9a">+1,500</b> coins for every successful referral.</p>
+      <div style="margin:20px 0;padding:14px;border-radius:15px;background:#102f4b;color:#73ddff;font-weight:800">t.me/coinfox_bot?start=amd123</div>
+      <button class="upgrade" onclick="copyReferral()">Copy Referral Link</button>
+    </div>
+  </div>
+</div>
+
+<nav class="bottom">
+  <button class="nav active" onclick="nav('earnPage',this)"><span class="ni">◆</span>Earn</button>
+  <button class="nav" onclick="nav('cardsPage',this)"><span class="ni">◈</span>Cards</button>
+  <button class="nav" onclick="nav('shopPage',this)"><span class="ni">🛍</span>Shop</button>
+  <button class="nav" onclick="nav('refPage',this)"><span class="ni">💰</span>Earn</button>
+  <button class="nav" onclick="showInfo()"><span class="ni">👥</span>Friends</button>
+</nav>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal" onclick="if(event.target===this)closeInfo()">
+  <div class="sheet"><h2>🦊 XMPR100</h2><p>Telegram Mini App demo — সম্পূর্ণ HTML, CSS ও JavaScript দিয়ে তৈরি। Balance, tasks, mining toggle, upgrade, referral এবং shop interaction browser-এর localStorage-এ সেভ হয়।</p><button class="close" onclick="closeInfo()">Close</button></div>
+</div>
+
+<script>
+/* Monetag: show one ad after every 10 user taps/clicks */
+let balance=Number(localStorage.getItem('coinfox_balance')||100390);
+let tapCount=Number(localStorage.getItem('coinfox_tap_count')||0);
+let adShowing=false;
+
+function countTap(){
+  tapCount++;
+  localStorage.setItem('coinfox_tap_count', tapCount);
+  if(tapCount >= 10){
+    tapCount=0;
+    localStorage.setItem('coinfox_tap_count','0');
+    showMonetagAd();
+  }
+}
+
+function showMonetagAd(){
+  if(adShowing) return;
+  adShowing=true;
+
+  try{
+    if(typeof window.show_11711270 === 'function'){
+      const result=window.show_11711270();
+      if(result && typeof result.then === 'function'){
+        result.catch(()=>{}).finally(()=>{adShowing=false;});
+      }else{
+        setTimeout(()=>{adShowing=false},1500);
+      }
+    }else{
+      // SDK may still be loading; retry once shortly.
+      setTimeout(()=>{
+        try{
+          if(typeof window.show_11711270 === 'function'){
+            const result=window.show_11711270();
+            if(result && typeof result.then === 'function') result.catch(()=>{}).finally(()=>{adShowing=false;});
+            else setTimeout(()=>{adShowing=false},1500);
+          }else{
+            adShowing=false;
+            toast('Ad service is still loading. Please try again.');
+          }
+        }catch(e){ adShowing=false; }
+      },1000);
+    }
+  }catch(e){
+    adShowing=false;
+  }
+}
+
+/* Count real user taps on app controls, while avoiding accidental double counting. */
+document.addEventListener('click', function(e){
+  const el=e.target.closest('button, .switch');
+  if(!el || el.closest('.modal')) return;
+  countTap();
+});
+
+
+let mining=localStorage.getItem('coinfox_mining')==='1';
+const $=id=>document.getElementById(id);
+function render(){ $('balance').textContent=balance.toLocaleString('en-US'); $('switch').classList.toggle('on',mining); }
+function save(){localStorage.setItem('coinfox_balance',balance)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.tt);window.tt=setTimeout(()=>t.classList.remove('show'),2200)}
+function add(n){balance+=n;save();render();toast('+'+n.toLocaleString()+' coins added!')}
+function claimDaily(){if(localStorage.getItem('coinfox_daily')===new Date().toDateString())return toast('আজকের Daily Reward already claimed!');localStorage.setItem('coinfox_daily',new Date().toDateString());add(500);$('daily').textContent='Done';$('daily').classList.add('done')}
+function completeTask(btn,n){if(btn.classList.contains('done'))return;add(n);btn.textContent='Done';btn.classList.add('done')}
+function buyCard(btn,cost){if(balance<cost)return toast('Not enough coins!');balance-=cost;save();render();btn.textContent='Owned';btn.classList.add('done');toast('Purchase successful!')}
+function upgrade(){if(balance<5000)return toast('Upgrade requires 5,000 coins');balance-=5000;save();render();toast('Level upgraded successfully!')}
+function toggleMining(){mining=!mining;localStorage.setItem('coinfox_mining',mining?'1':'0');render();toast(mining?'Auto Mining ON':'Auto Mining OFF')}
+function nav(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.remove('active'));btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'})}
+function copyReferral(){navigator.clipboard?.writeText('https://t.me/coinfox_bot?start=amd123');toast('Referral link copied!')}
+function showInfo(){$('modal').classList.add('show')}
+function closeInfo(){$('modal').classList.remove('show')}
+render();
+setInterval(()=>{if(mining){balance+=1;save();render()}},30000);
+</script>
+</body>
+</html>
